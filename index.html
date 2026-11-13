@@ -50,7 +50,7 @@ header p{margin:2px 0 0;color:var(--mut);font-size:13px;white-space:nowrap;overf
 .sect{font-size:12px;font-weight:800;color:var(--mut);text-transform:uppercase;letter-spacing:.6px;margin:6px 4px -2px}
 .ev{display:flex;gap:14px;padding:13px;cursor:pointer;transition:transform .12s;text-align:left;width:100%;border:1px solid var(--card-b)}
 .ev:active{transform:scale(.985)}
-.cover{flex:0 0 66px;height:66px;border-radius:18px;display:grid;place-items:center;font-size:32px;overflow:hidden;background:linear-gradient(135deg,var(--accs),rgba(201,150,43,.14));border:1px solid var(--line)}
+.cover{flex:0 0 84px;width:84px;height:105px;border-radius:16px;display:grid;place-items:center;overflow:hidden;background:linear-gradient(150deg,#a3182c,#d4475a 60%,#c9962b);border:1px solid var(--line);color:#fff;font-weight:900;font-size:30px;letter-spacing:-1px;text-shadow:0 2px 8px rgba(0,0,0,.25)}
 .cover img{width:100%;height:100%;object-fit:cover}
 .ev .b{flex:1;min-width:0}
 .ev h3{margin:0 0 3px;font-size:16px;line-height:1.25}
@@ -79,7 +79,9 @@ html.dark .chip.paid{color:#f0c060}
 /* детали и формы */
 .back{appearance:none;border:0;background:none;color:var(--acc);font-weight:700;padding:4px 0 12px;cursor:pointer}
 .hero{padding:20px;text-align:center}
-.hero .cover{width:96px;height:96px;font-size:48px;margin:0 auto 12px;border-radius:26px}
+.poster{margin:-6px -6px 14px;border-radius:18px;overflow:hidden;background:var(--field);border:1px solid var(--line)}
+.poster img{display:block;width:100%;height:auto;max-height:78vh;object-fit:contain;background:#000}
+.poster-ph{aspect-ratio:16/9;display:grid;place-items:center;background:linear-gradient(150deg,#a3182c,#d4475a 60%,#c9962b);color:#fff;font-size:56px;font-weight:900;letter-spacing:-2px}
 .hero h2{margin:0 0 8px;font-size:22px;letter-spacing:-.3px;line-height:1.2}
 .facts{display:grid;gap:8px;text-align:left;margin-top:14px}
 .fact{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:14px;background:var(--field);border:1px solid var(--line);font-size:14px}
@@ -99,11 +101,30 @@ input:focus,textarea:focus{border-color:var(--acc);box-shadow:0 0 0 3px var(--ac
 .seg{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:4px;border-radius:16px;background:var(--field);border:1px solid var(--line)}
 .seg button{appearance:none;border:0;background:none;padding:10px;border-radius:12px;font-weight:700;color:var(--mut);cursor:pointer}
 .seg button.on{background:var(--card);color:var(--ink);box-shadow:0 2px 8px rgba(0,0,0,.08)}
-.check{display:flex;align-items:center;gap:10px;margin-top:12px;font-size:14px;cursor:pointer}
+.check{display:flex;align-items:center;gap:10px;margin-top:12px;font-size:14px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:600;color:var(--ink)}
 .check input{width:20px;height:20px;accent-color:var(--acc)}
-.emojis{display:flex;gap:6px;flex-wrap:wrap}
-.emojis button{appearance:none;width:42px;height:42px;border-radius:12px;border:1px solid var(--line);background:var(--field);font-size:22px;cursor:pointer}
-.emojis button.on{border-color:var(--acc);box-shadow:0 0 0 2px var(--accs)}
+.pup{border-radius:16px;border:1.5px dashed var(--line);background:var(--field);cursor:pointer;overflow:hidden;text-align:center}
+.pup .ph{padding:26px 14px;color:var(--mut);font-size:14px}.pup .ph b{display:block;color:var(--ink);font-size:15px;margin-bottom:2px}
+.pup img{display:block;width:100%;max-height:340px;object-fit:contain;background:#000}
+.fld{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.fld input[type=text]{flex:1;min-width:0}
+.fld .req{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--mut);font-weight:700;white-space:nowrap;cursor:pointer;margin:0;text-transform:none;letter-spacing:0}
+.fld .req input{width:18px;height:18px;accent-color:var(--acc)}
+.presets{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+.presets button{appearance:none;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:6px 11px;font-size:12.5px;font-weight:700;color:var(--acc);cursor:pointer}
+.fbox{padding:10px;border-radius:14px;background:var(--field);border:1px solid var(--line);margin-bottom:8px}
+.fbox .fld{margin-bottom:0}
+.fbox select,.sel{font:inherit;font-size:15px;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 8px;outline:none}
+.sel{width:100%;font-size:16px;padding:12px 12px;background:var(--field);border-radius:14px}
+.fbox .opts{margin-top:8px}
+.coc{display:flex;gap:6px;flex-wrap:wrap}
+.coc button{appearance:none;display:flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--field);border-radius:999px;padding:6px 12px 6px 6px;font-size:13px;font-weight:700;cursor:pointer;color:var(--ink)}
+.coc button img,.coc button i{width:24px;height:24px;border-radius:50%;object-fit:cover;background:var(--accs);display:grid;place-items:center;font-style:normal;font-size:12px}
+.coc button.on{border-color:var(--acc);background:var(--accs);color:var(--acc)}
+.linkbox{display:flex;gap:8px;align-items:center;padding:10px 12px;border-radius:14px;background:var(--field);border:1px solid var(--line);font-size:13.5px;word-break:break-all}
+.linkbox span{flex:1;min-width:0}
+.news .go{appearance:none;border:0;background:none;color:var(--acc);font-weight:800;padding:8px 0 0;cursor:pointer;font-size:14px}
+.extra{display:block;margin-top:3px;font-size:12.5px;color:var(--mut)}
 .pay{padding:14px;border-radius:16px;background:rgba(201,150,43,.12);border:1px dashed rgba(201,150,43,.6);margin-bottom:4px}
 .pay b{display:block;font-size:20px;letter-spacing:.5px;margin:2px 0}
 .copy{appearance:none;border:0;background:var(--gold);color:#2e1f00;font-weight:800;font-size:13px;padding:7px 12px;border-radius:10px;margin-top:6px;cursor:pointer}
@@ -152,6 +173,8 @@ input:focus,textarea:focus{border-color:var(--acc);box-shadow:0 0 0 3px var(--ac
 <script>
 const API = (new URLSearchParams(location.search).get('api')) || 'https://script.google.com/macros/s/AKfycbxFRMRUNXSMGynPD4jjxi9xBdD8XokhnLwP2Rsz62e5POtKQab_FrU7XO1ZR2mUwzR7Nw/exec';
 const LOGO = 'https://www.uwed.uz/apple-touch-icon.png';
+const BOT = 'uwedsu_events_bot';
+const evLink = id => 'https://t.me/' + BOT + '?start=' + encodeURIComponent(id);
 
 const tg = window.Telegram && Telegram.WebApp;
 const inTg = !!(tg && tg.initData);
@@ -198,7 +221,9 @@ const fmtDate = iso => {
 };
 const ago = iso => { const m = Math.round((Date.now() - new Date(iso)) / 60000); return m < 60 ? Math.max(1, m) + ' мин назад' : m < 1440 ? Math.round(m / 60) + ' ч назад' : fmtDate(iso).split(',').slice(0, 2).join(','); };
 const money = n => Number(n).toLocaleString('ru-RU').replace(/[\s,]/g, ' ') + ' сум';
-const coverHTML = c => /^https?:\/\//.test(c || '') ? `<img src="${esc(c)}" alt="" loading="lazy">` : esc(c || '🎟');
+const isImg = c => /^https?:\/\//.test(c || '');
+const initial = t => esc((String(t || 'U').trim().match(/[A-Za-zА-Яа-яЁё0-9]/) || ['U'])[0].toUpperCase());
+const coverHTML = (c, t) => isImg(c) ? `<img src="${esc(c)}" alt="" loading="lazy">` : initial(t);
 const priceChip = e => e.price > 0 ? `<span class="chip paid">${money(e.price)}</span>` : '<span class="chip free">Бесплатно</span>';
 const seatsChip = e => e.left == null ? '' : e.left === 0 ? '<span class="chip full">Мест нет</span>' : `<span class="chip">${e.left <= 5 ? '🔥 ' : ''}Осталось ${e.left}</span>`;
 const stChip = s => `<span class="chip ${s === 'Принят' || s === 'Опубликован' ? 'ok' : s === 'Отклонён' || s === 'Скрыт' ? 'no' : 'wait'}">${esc(s)}</span>`;
@@ -262,7 +287,7 @@ function skeleton() { $('list').innerHTML = '<div class="skel"></div><div class=
 function evCard(e, opts) {
   opts = opts || {};
   return `<button class="ev glass" data-ev="${esc(e.id)}">
-    <div class="cover">${coverHTML(e.cover)}</div>
+    <div class="cover">${coverHTML(e.cover, e.title)}</div>
     <div class="b">${e.club ? `<div class="club">${esc(e.club)}</div>` : ''}<h3>${esc(e.title)}</h3>
       <div class="meta"><span>🗓 ${esc(fmtDate(e.date))}</span>${e.place ? `<span>📍 ${esc(e.place)}</span>` : ''}</div>
       <div class="chips">${opts.status ? stChip(e.status) : ''}${e.type === 'trip' ? '<span class="chip trip">Трип</span>' : ''}${priceChip(e)}${seatsChip(e)}</div>
@@ -272,7 +297,7 @@ function evCard(e, opts) {
 function tabEvents() {
   const L = $('list');
   let h = '';
-  if (S.news.length) h += '<div class="sect">Объявления</div>' + S.news.slice(0, 5).map(n => `<div class="glass news"><div class="nh"><b>${esc(n.club)}</b><span>${esc(ago(n.date))}</span></div><p>${esc(n.text)}</p></div>`).join('');
+  if (S.news.length) h += '<div class="sect">Объявления</div>' + S.news.slice(0, 5).map(n => `<div class="glass news"><div class="nh"><b>${esc(n.club)}</b><span>${esc(ago(n.date))}</span></div><p>${esc(n.text)}</p>${n.eventId && S.events.find(x => x.id === n.eventId) ? `<button class="go" data-ev="${esc(n.eventId)}">🎟 ${esc(S.events.find(x => x.id === n.eventId).title)} — записаться →</button>` : ''}</div>`).join('');
   h += S.events.length ? (S.news.length ? '<div class="sect">Ивенты</div>' : '') + S.events.map(e => evCard(e)).join('')
     : '<div class="empty glass"><div class="e">🗓</div>Скоро здесь появятся новые ивенты</div>';
   L.innerHTML = h;
@@ -285,7 +310,7 @@ async function tabMy() {
   if (S.tab !== 'my') return;
   if (!r.ok) { $('list').innerHTML = '<div class="empty glass"><div class="e">🔒</div>Открой приложение через бота в Telegram, чтобы видеть свои заявки</div>'; return; }
   if (!r.list.length) { $('list').innerHTML = '<div class="empty glass"><div class="e">🎟</div>Ты пока никуда не записан(а)</div>'; return; }
-  $('list').innerHTML = r.list.map(m => `<div class="ev glass" style="cursor:default"><div class="cover">${coverHTML(m.cover)}</div><div class="b"><h3>${esc(m.title)}</h3>
+  $('list').innerHTML = r.list.map(m => `<div class="ev glass" style="cursor:default"><div class="cover">${coverHTML(m.cover, m.title)}</div><div class="b"><h3>${esc(m.title)}</h3>
     <div class="meta">${m.date ? `<span>🗓 ${esc(fmtDate(m.date))}</span>` : ''}${m.place ? `<span>📍 ${esc(m.place)}</span>` : ''}</div>
     <div class="chips">${stChip(m.status)}${m.chat ? `<a class="chip" href="${esc(m.chat)}" data-link>💬 Чат участников</a>` : ''}</div></div></div>`).join('');
   $('list').querySelectorAll('[data-link]').forEach(a => a.onclick = ev => { ev.preventDefault(); openLink(a.getAttribute('href')); });
@@ -296,20 +321,25 @@ function showEvent(id) {
   const e = S.events.find(x => x.id === id); if (!e) return home();
   call('view', { eventId: id }).then(r => { if (r && r.views) e.views = r.views; });
   const paid = e.price > 0, full = e.left === 0;
-  render(`<div class="glass hero"><div class="cover">${coverHTML(e.cover)}</div>${e.club ? `<div class="club">${esc(e.club)}</div>` : ''}<h2>${esc(e.title)}</h2>
+  render(`<div class="glass hero"><div class="poster">${isImg(e.cover) ? `<img src="${esc(e.cover)}" alt="Постер">` : `<div class="poster-ph">${initial(e.title)}</div>`}</div>${e.club ? `<div class="club">${esc(e.club)}</div>` : ''}<h2>${esc(e.title)}</h2>
     <div class="chips" style="justify-content:center">${e.type === 'trip' ? '<span class="chip trip">Трип</span>' : ''}${priceChip(e)}${seatsChip(e)}</div>
     <div class="facts"><div class="fact"><i>🗓</i><div>${esc(fmtDate(e.date))}</div></div>${e.place ? `<div class="fact"><i>📍</i><div>${esc(e.place)}</div></div>` : ''}
     <div class="fact"><i>👁</i><div>${e.views} просмотров · ${e.registered} зарегистрировались</div></div></div>
     ${e.description ? `<p class="desc">${esc(e.description)}</p>` : ''}</div>
+    <div class="btns" style="margin-top:12px"><button class="btn small ghost" id="bShare" style="flex:1">📤 Поделиться ивентом</button></div>
     <div class="glass sec"><h4>Регистрация</h4>
       ${paid ? `<div class="pay"><div style="font-size:13px;color:var(--mut)">Переведи ${money(e.price)} на карту:</div><b>${esc(e.card)}</b>
         <div style="font-size:14px">${esc(e.holder)}</div><button class="copy" id="bCopy" type="button">Скопировать номер</button></div>` : ''}
       <label>ФИО</label><input type="text" id="fName" autocomplete="name" placeholder="Фамилия Имя">
       <label>Курс и факультет</label><input type="text" id="fCourse" placeholder="2 курс, Международные отношения">
       <label>Телефон</label><input type="tel" id="fPhone" autocomplete="tel" placeholder="+998 90 123 45 67">
+      ${(e.fields || []).map((fd, i) => `<label>${esc(fd.label)}${fd.required ? '' : ' <span style="text-transform:none;font-weight:500">(необязательно)</span>'}</label>${fd.type === 'choice'
+        ? `<select class="sel" id="fx${i}"><option value="">Выбери…</option>${fd.options.map(o => `<option>${esc(o)}</option>`).join('')}</select>`
+        : `<input type="text" id="fx${i}" maxlength="120">`}`).join('')}
       ${paid ? `<label>Скриншот оплаты</label><div class="upload" id="upload"><div class="th" id="shotTh">📎</div><div><div style="font-weight:700" id="shotT">Прикрепить скриншот</div><div class="hint" style="margin:0">Чек из Click, Payme или банка</div></div></div>` : ''}
       <button class="btn" id="bSend" ${full ? 'disabled' : ''}>${full ? 'Мест больше нет' : 'Записаться'}</button><div class="err" id="err"></div></div>`, true);
   fillForm();
+  $('bShare').onclick = () => shareEvent(e);
   let shot = null;
   if (paid) {
     $('bCopy').onclick = async () => { const n = (e.card || '').replace(/\s+/g, ''); try { await navigator.clipboard.writeText(n); toast('Номер карты скопирован'); } catch (x) { toast(n); } haptic('n', 'success'); };
@@ -321,11 +351,13 @@ function showEvent(id) {
     const bad = [];
     if (f.name.length < 3) bad.push('fName'); if (!f.course) bad.push('fCourse'); if (f.phone.replace(/\D/g, '').length < 9) bad.push('fPhone');
     bad.forEach(x => $(x).classList.add('bad'));
+    const extra = {};
+    (e.fields || []).forEach((fd, i) => { const el = $('fx' + i), v = el.value.trim(); if (v) extra[fd.label] = v; else if (fd.required) { el.classList.add('bad'); bad.push('fx' + i); } el.oninput = el.onchange = () => el.classList.remove('bad'); });
     if (paid && !shot) { $('upload').classList.add('bad'); bad.push('shot'); }
     if (bad.length) { haptic('n', 'error'); $('err').textContent = bad.length === 1 && bad[0] === 'shot' ? 'Прикрепи скриншот оплаты' : 'Заполни отмеченные поля'; return; }
     saveForm(f);
     await askWrite();
-    const r = await call('register', { eventId: e.id, form: f, screenshot: paid ? shot : null }, $('bSend'));
+    const r = await call('register', { eventId: e.id, form: f, extra, screenshot: paid ? shot : null }, $('bSend'));
     if (!r.ok) { $('err').textContent = r.message || 'Что-то пошло не так'; return; }
     haptic('n', 'success'); e.registered++; if (e.left) e.left--;
     const ok = r.status === 'Принят';
@@ -350,6 +382,13 @@ function askWrite() {
   const u = inTg && tg.initDataUnsafe.user;
   if (!u || u.allows_write_to_pm !== false || !tg.requestWriteAccess) return Promise.resolve();
   return new Promise(r => { try { tg.requestWriteAccess(() => r()); } catch (e) { r(); } });
+}
+async function copyText(t, msg) { try { await navigator.clipboard.writeText(t); toast(msg); } catch (x) { const a = document.createElement('textarea'); a.value = t; document.body.appendChild(a); a.select(); try { document.execCommand('copy'); toast(msg); } catch (y) { toast(t); } a.remove(); } haptic('n', 'success'); }
+function shareEvent(e) {
+  const url = evLink(e.id), text = e.title + ' · ' + fmtDate(e.date);
+  const share = 'https://t.me/share/url?url=' + encodeURIComponent(url) + '&text=' + encodeURIComponent(text);
+  try { if (inTg) return tg.openTelegramLink(share); } catch (x) {}
+  copyText(url, 'Ссылка скопирована');
 }
 function openLink(u) { if (!u) return; if (/^@/.test(u)) u = 'https://t.me/' + u.slice(1); try { if (inTg && /^https:\/\/t\.me\//.test(u)) return tg.openTelegramLink(u); if (inTg) return tg.openLink(u); } catch (e) {} window.open(u, '_blank'); }
 
@@ -393,15 +432,18 @@ async function tabClub() {
   if (r.ok) { S.mine = r.events; $('list').querySelectorAll('[data-ev]').forEach(b => b.onclick = () => go(() => showManage(b.dataset.ev))); }
 }
 
-const EMOJIS = ['🎤', '🎬', '🏔', '🎉', '⚖️', '🌍', '🎓', '⚽', '🎨', '📚', '🍕', '🎟'];
+const PRESETS = [{ label: 'Имя партнёра' }, { label: 'Название команды' }, { label: 'Telegram партнёра' }, { label: 'Комитет', type: 'choice', options: ['UNSC', 'UNGA', 'HRC'] }];
 function showEditor(id) {
   const e = id ? (S.mine || []).find(x => x.id === id) : null;
-  const v = e || { type: 'event', cover: '🎤', approval: false };
-  let type = v.type, cover = v.cover, coverData = null;
+  const v = e || { type: 'event', cover: '', approval: false, fields: [] };
+  let type = v.type, cover = isImg(v.cover) ? v.cover : '', coverData = null;
+  const flds = (v.fields || []).map(f => ({ label: f.label, required: !!f.required, type: f.type || 'text', options: (f.options || []).join(', ') }));
+  let co = (v.coauthors || []).slice();
+  const canCo = !e || e.author;
   render(`<div class="glass sec" style="margin-top:0"><h4>${e ? 'Редактировать' : 'Новый ивент'}</h4>
     <div class="seg"><button data-type="event">🎤 Ивент</button><button data-type="trip">🏔 Трип</button></div>
-    <label>Обложка</label><div class="emojis" id="emo">${EMOJIS.map(x => `<button data-e="${x}">${x}</button>`).join('')}<button data-e="img" title="Загрузить фото">🖼</button></div>
-    <div class="hint" id="coverHint"></div>
+    <label>Постер</label><div class="pup" id="pup"></div>
+    <div class="btns hidden" id="pupActs" style="margin-top:8px"><button class="btn small ghost" id="bPosterNew" type="button">🔄 Заменить</button><button class="btn small ghost" id="bPosterDel" type="button">🗑 Убрать</button></div>
     <label>Название</label><input type="text" id="eTitle" maxlength="100" placeholder="Дебаты: AI в образовании" value="${esc(v.title || '')}">
     <div class="row2"><div><label>Дата и время</label><input type="datetime-local" id="eDate" value="${toLocalInput(v.date)}"></div>
       <div><label>Мест</label><input type="number" id="eCap" min="0" placeholder="Без лимита" value="${v.capacity || ''}"></div></div>
@@ -412,23 +454,62 @@ function showEditor(id) {
       <label>Имя держателя карты</label><input type="text" id="eHolder" placeholder="Имя Фамилия" value="${esc(v.holder || '')}"></div>
     <label>Ссылка на чат участников</label><input type="url" id="eChat" placeholder="https://t.me/+…" value="${esc(v.chat || '')}">
     <div class="hint">Придёт участникам после того, как их примут.</div>
+    <label>Поля анкеты</label><div class="hint" style="margin:-2px 0 8px">ФИО, курс и телефон спрашиваются всегда. Добавь свои — например для квиза: имя партнёра и название команды.</div>
+    <div id="flds"></div>
+    <div class="presets" id="presets"></div>
+    ${canCo ? `<label>Соавторы</label><div class="hint" style="margin:-2px 0 8px">Клубы-соавторы видят участников, могут редактировать ивент и делать рассылки. Их название появится рядом с вашим.</div><div class="coc" id="coc"><div class="hint">Загружаю клубы…</div></div>` : ''}
     <label class="check" id="apprRow"><input type="checkbox" id="eAppr" ${v.needsApproval ? 'checked' : ''}> Принимать заявки вручную</label>
     <label class="check"><input type="checkbox" id="eNotify"> Оповестить всех в боте при публикации</label>
     <div class="btns"><button class="btn ghost" id="bDraft">Сохранить</button><button class="btn" id="bPub">🚀 Опубликовать</button></div><div class="err" id="err"></div></div>`, true);
   const setType = t => { type = t; app.querySelectorAll('[data-type]').forEach(b => b.classList.toggle('on', b.dataset.type === t)); $('tripBox').classList.toggle('hidden', t !== 'trip'); $('apprRow').classList.toggle('hidden', t === 'trip'); };
-  const setCover = c => { cover = c; app.querySelectorAll('[data-e]').forEach(b => b.classList.toggle('on', b.dataset.e === c || (c && /^https?:|^data:/.test(c) && b.dataset.e === 'img'))); $('coverHint').textContent = /^https?:|^data:/.test(c || '') ? 'Фото выбрано ✓' : ''; };
+  const showPoster = () => {
+    const src = coverData || cover;
+    $('pup').innerHTML = src ? `<img src="${esc(src)}" alt="Постер">` : '<div class="ph"><b>🖼 Загрузить постер</b>Афиша ивента, лучше вертикальная (4:5 или 9:16)</div>';
+    $('pupActs').classList.toggle('hidden', !src);
+  };
+  const pick = () => pickImage(1600, d => { coverData = d; showPoster(); });
+  $('pup').onclick = pick; $('bPosterNew').onclick = pick;
+  $('bPosterDel').onclick = () => { coverData = null; cover = ''; showPoster(); };
+  const drawF = () => {
+    $('flds').innerHTML = flds.map((f, i) => `<div class="fbox"><div class="fld"><input type="text" data-fl="${i}" maxlength="40" placeholder="Название поля" value="${esc(f.label)}">
+      <button class="mini" data-fd="${i}" type="button">✕</button></div>
+      <div class="fld" style="margin-top:8px"><select data-ft="${i}"><option value="text" ${f.type !== 'choice' ? 'selected' : ''}>✏️ Ответ текстом</option><option value="choice" ${f.type === 'choice' ? 'selected' : ''}>☑️ Выбор из списка</option></select>
+      <label class="req"><input type="checkbox" data-fr="${i}" ${f.required ? 'checked' : ''}>обязательное</label></div>
+      ${f.type === 'choice' ? `<input class="opts" type="text" data-fo="${i}" placeholder="Варианты через запятую: UNSC, UNGA, HRC" value="${esc(f.options)}">` : ''}</div>`).join('');
+    const used = flds.map(f => f.label.trim().toLowerCase());
+    $('presets').innerHTML = (flds.length < 8 ? PRESETS.map((p, j) => used.indexOf(p.label.toLowerCase()) < 0 ? `<button type="button" data-fp="${j}">＋ ${esc(p.label)}</button>` : '').join('') + '<button type="button" data-fp="-1">＋ Своё поле</button>' : '');
+    app.querySelectorAll('[data-fl]').forEach(el => el.oninput = () => { flds[+el.dataset.fl].label = el.value; el.classList.remove('bad'); });
+    app.querySelectorAll('[data-fo]').forEach(el => el.oninput = () => { flds[+el.dataset.fo].options = el.value; el.classList.remove('bad'); });
+    app.querySelectorAll('[data-fr]').forEach(el => el.onchange = () => { flds[+el.dataset.fr].required = el.checked; });
+    app.querySelectorAll('[data-ft]').forEach(el => el.onchange = () => { flds[+el.dataset.ft].type = el.value; drawF(); const o = app.querySelector(`[data-fo="${el.dataset.ft}"]`); o && o.focus(); });
+    app.querySelectorAll('[data-fd]').forEach(el => el.onclick = () => { flds.splice(+el.dataset.fd, 1); drawF(); });
+    app.querySelectorAll('[data-fp]').forEach(el => el.onclick = () => {
+      const p = PRESETS[+el.dataset.fp];
+      flds.push(p ? { label: p.label, required: true, type: p.type || 'text', options: (p.options || []).join(', ') } : { label: '', required: false, type: 'text', options: '' });
+      drawF(); if (!p) { const ins = app.querySelectorAll('[data-fl]'); ins[ins.length - 1].focus(); }
+    });
+  };
+  const drawCo = clubs => {
+    if (!$('coc')) return;
+    const own = S.me.club ? S.me.club.id : (e ? e.clubId : '');
+    const list = clubs.filter(c => c.id !== own);
+    $('coc').innerHTML = list.length ? list.map(c => `<button type="button" data-co="${esc(c.id)}" class="${co.indexOf(c.id) >= 0 ? 'on' : ''}">${c.avatar ? `<img src="${esc(c.avatar)}" alt="">` : `<i>${initial(c.name)}</i>`}${esc(c.name)}</button>`).join('') : '<div class="hint">Других одобренных клубов пока нет</div>';
+    app.querySelectorAll('[data-co]').forEach(b => b.onclick = () => { const id = b.dataset.co, k = co.indexOf(id); k >= 0 ? co.splice(k, 1) : co.length < 5 && co.push(id); b.classList.toggle('on', co.indexOf(id) >= 0); haptic('i', 'light'); });
+  };
+  if (canCo) call('clubs').then(r => drawCo(r.ok ? r.clubs : []));
   app.querySelectorAll('[data-type]').forEach(b => b.onclick = () => setType(b.dataset.type));
-  app.querySelectorAll('[data-e]').forEach(b => b.onclick = () => b.dataset.e === 'img' ? pickImage(1000, d => { coverData = d; setCover(d); }) : (coverData = null, setCover(b.dataset.e)));
-  setType(type); setCover(cover);
+  setType(type); showPoster(); drawF();
   const save = async (publish, btn) => {
     $('err').textContent = '';
     const ev = { id: e ? e.id : '', type, title: $('eTitle').value.trim(), date: fromLocalInput($('eDate').value), capacity: $('eCap').value,
       place: $('ePlace').value.trim(), description: $('eDesc').value.trim(), chat: $('eChat').value.trim(), approval: type !== 'trip' && $('eAppr').checked,
       price: type === 'trip' ? $('ePrice').value : 0, card: type === 'trip' ? $('eCard').value.trim() : '', holder: type === 'trip' ? $('eHolder').value.trim() : '',
-      cover: coverData ? '' : cover };
+      cover: coverData ? '' : cover, coauthors: canCo ? co : undefined,
+      fields: flds.map(f => ({ label: f.label.trim().replace(/[:\n]/g, ' '), required: f.required, type: f.type, options: f.options.split(',').map(x => x.trim()).filter(Boolean) })).filter(f => f.label) };
     const bad = []; if (ev.title.length < 3) bad.push('eTitle'); if (!ev.date) bad.push('eDate');
+    flds.forEach((f, i) => { if (f.label.trim() && f.type === 'choice' && !f.options.split(',').some(x => x.trim())) bad.push(app.querySelector(`[data-fo="${i}"]`)); });
     if (type === 'trip' && Number(ev.price) > 0) { if (ev.card.replace(/\D/g, '').length < 12) bad.push('eCard'); if (ev.holder.length < 3) bad.push('eHolder'); }
-    bad.forEach(x => $(x).classList.add('bad')); if (bad.length) { $('err').textContent = 'Заполни отмеченные поля'; haptic('n', 'error'); return; }
+    bad.forEach(x => (typeof x === 'string' ? $(x) : x).classList.add('bad')); if (bad.length) { $('err').textContent = 'Заполни отмеченные поля'; haptic('n', 'error'); return; }
     const r = await call('eventSave', { event: ev, cover: coverData, publish, notifyAll: $('eNotify').checked }, btn);
     if (!r.ok) { $('err').textContent = r.message; return; }
     haptic('n', 'success');
@@ -456,30 +537,38 @@ async function showManage(id) {
       <button class="btn small ghost" id="bDel">🗑</button></div></div>
     ${admin ? `<div class="glass sec"><h4>👑 Гегемония</h4><div class="hint" style="margin-top:-6px">Настоящих просмотров: ${e.realViews || 0}. Сколько добавить сверху:</div>
       <div style="display:flex;gap:8px;margin-top:8px"><input type="number" id="boost" min="0" value="${e.boost || 0}"><button class="btn small" id="bBoost">Сохранить</button></div></div>` : ''}
+    <div class="glass sec"><h4>🔗 Ссылка на регистрацию</h4><div class="hint" style="margin:-6px 0 8px">Вставь в пост или сторис — по ней откроется бот и сразу этот ивент${e.status === 'Опубликован' ? '' : ' (заработает после публикации)'}.</div>
+      <div class="linkbox"><span id="evUrl">${esc(evLink(e.id))}</span></div>
+      <div class="btns" style="margin-top:8px"><button class="btn small" id="bLink">📋 Скопировать</button><button class="btn small ghost" id="bShare">📤 Поделиться</button></div></div>
     <div class="glass sec"><h4>📣 Рассылка участникам (${acc})</h4><textarea id="bcText" placeholder="Например: сбор у главного входа в 7:45, не опаздывайте!"></textarea>
       <button class="btn" id="bBc" ${acc ? '' : 'disabled'}>Отправить</button></div>
     <div class="glass sec"><h4>👥 Участники (${P.length})</h4><div class="btns" style="margin:-4px 0 10px"><button class="btn small ghost" id="bCopy">📋 Скопировать список</button></div>
-      <div class="list" style="gap:8px">${P.length ? P.map(p => `<div class="person"><div class="pb"><b>${esc(p.name)}</b>${esc(p.course)} · ${esc(p.phone)}${p.username ? ' · ' + esc(p.username) : ''}${p.paid ? ' · 💳 скрин в боте' : ''}</div>
+      <div class="list" style="gap:8px">${P.length ? P.map(p => `<div class="person"><div class="pb"><b>${esc(p.name)}</b>${esc(p.course)} · ${esc(p.phone)}${p.username ? ' · ' + esc(p.username) : ''}${p.paid ? ' · 💳 скрин в боте' : ''}${Object.keys(p.extra || {}).map(k => `<span class="extra">${esc(k)}: <b style="display:inline;font-size:inherit">${esc(p.extra[k])}</b></span>`).join('')}</div>
         <div class="acts">${p.status === 'На проверке' ? `<button class="mini" data-ok="${p.id}">✅</button><button class="mini" data-no="${p.id}">❌</button>` : stChip(p.status)}</div></div>`).join('') : '<div class="hint">Пока никто не записался</div>'}</div></div>`, true);
   $('bEdit').onclick = () => go(() => showEditor(id));
+  $('bLink').onclick = () => copyText(evLink(e.id), 'Ссылка скопирована — вставляй в пост');
+  $('bShare').onclick = () => shareEvent(e);
   const setSt = async (st, btn) => { const r = await call('eventStatus', { eventId: id, status: st }, btn); if (!r.ok) return toast(r.message); await refresh(); toast(st === 'delete' ? 'Удалено' : 'Готово'); st === 'delete' ? (S.stack = [], showHome()) : showManage(id); };
   if ($('bHide')) $('bHide').onclick = () => setSt('hide', $('bHide'));
   if ($('bPub')) $('bPub').onclick = () => setSt('pub', $('bPub'));
   $('bDel').onclick = () => { const ok = () => setSt('delete', $('bDel')); if (inTg && tg.showConfirm) tg.showConfirm('Удалить ивент «' + e.title + '»?', y => y && ok()); else if (confirm('Удалить ивент?')) ok(); };
   if ($('bBoost')) $('bBoost').onclick = async () => { const r = await call('boost', { eventId: id, boost: $('boost').value }, $('bBoost')); if (r.ok) { toast('Просмотров теперь: ' + r.views); refresh(); } else toast(r.message); };
   $('bBc').onclick = async () => { const t = $('bcText').value.trim(); if (t.length < 2) return $('bcText').classList.add('bad'); const r = await call('broadcast', { eventId: id, text: t }, $('bBc')); if (r.ok) { $('bcText').value = ''; toast('Отправляем ' + r.queued + ' участникам, в течение минуты'); } else toast(r.message); };
-  $('bCopy').onclick = async () => { const txt = ['ФИО\tКурс\tТелефон\tTelegram\tСтатус'].concat(P.map(p => [p.name, p.course, p.phone, p.username, p.status].join('\t'))).join('\n'); try { await navigator.clipboard.writeText(txt); toast('Список скопирован, вставь в Excel или Google Таблицы'); } catch (x) { toast('Не получилось скопировать'); } };
+  $('bCopy').onclick = async () => { const xk = (e.fields || []).map(f => f.label); P.forEach(p => Object.keys(p.extra || {}).forEach(k => xk.indexOf(k) < 0 && xk.push(k)));
+    const txt = [['ФИО', 'Курс', 'Телефон'].concat(xk, ['Telegram', 'Статус']).join('\t')].concat(P.map(p => [p.name, p.course, p.phone].concat(xk.map(k => (p.extra || {})[k] || ''), [p.username, p.status]).join('\t'))).join('\n'); try { await navigator.clipboard.writeText(txt); toast('Список скопирован, вставь в Excel или Google Таблицы'); } catch (x) { toast('Не получилось скопировать'); } };
   app.querySelectorAll('[data-ok],[data-no]').forEach(b => b.onclick = async () => { const r = await call('regStatus', { regId: b.dataset.ok || b.dataset.no, ok: !!b.dataset.ok }, b); if (r.ok) { haptic('n', 'success'); showManage(id); } else toast(r.message); });
 }
 
 function showAnnounce() {
   render(`<div class="glass sec" style="margin-top:0"><h4>📢 Объявление</h4><p class="hint" style="margin:-6px 0 8px">Появится в ленте у всех над ивентами.</p>
     <textarea id="nText" placeholder="Набор в команду, итоги ивента, важная новость…"></textarea>
+    <label>Привязать к ивенту</label><select class="sel" id="nEv"><option value="">— без ивента —</option>${S.events.map(e => `<option value="${esc(e.id)}">${esc(e.title)} · ${esc(fmtDate(e.date))}</option>`).join('')}</select>
+    <div class="hint">Под объявлением появится кнопка «Записаться», ведущая в этот ивент.</div>
     <label class="check"><input type="checkbox" id="nAll"> Отправить всем в бот</label>
     <button class="btn" id="bGo">Опубликовать</button><div class="err" id="err"></div></div>`, true);
   $('bGo').onclick = async () => {
     const t = $('nText').value.trim(); if (t.length < 3) { $('nText').classList.add('bad'); return; }
-    const r = await call('announce', { text: t, notifyAll: $('nAll').checked }, $('bGo'));
+    const r = await call('announce', { text: t, eventId: $('nEv').value, notifyAll: $('nAll').checked }, $('bGo'));
     if (!r.ok) { $('err').textContent = r.message; return; }
     toast('Опубликовано' + (r.notified ? ' · получат ' + r.notified + ' чел.' : '')); await refresh(); home('events');
   };
