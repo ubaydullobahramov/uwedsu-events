@@ -116,6 +116,14 @@ input:focus,textarea:focus{border-color:var(--acc);box-shadow:0 0 0 3px var(--ac
 .fbox .fld{margin-bottom:0}
 .fbox select,.sel{font:inherit;font-size:15px;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 8px;outline:none}
 .sel{width:100%;font-size:16px;padding:12px 12px;background:var(--field);border-radius:14px}
+.pick{display:flex;flex-wrap:wrap;gap:8px;padding:4px;border-radius:16px;border:1px solid transparent}
+.pick button{appearance:none;flex:1 1 auto;min-width:72px;border:1.5px solid var(--line);background:var(--field);color:var(--ink);font-weight:800;font-size:15px;padding:12px 14px;border-radius:14px;cursor:pointer;transition:transform .12s,background .2s,box-shadow .2s}
+.pick button:active{transform:scale(.96)}
+.pick button.on{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#fff;border-color:transparent;box-shadow:0 6px 16px rgba(163,24,44,.28)}
+.pick.bad{border-color:var(--no)!important}
+.multi .mrow{display:flex;gap:8px;margin-bottom:8px}.multi .mrow input{flex:1;min-width:0}
+.multi .mrow .mini{flex:0 0 auto}
+.addm{appearance:none;width:100%;border:1.5px dashed var(--line);background:none;color:var(--acc);font-weight:800;font-size:14px;padding:11px;border-radius:14px;cursor:pointer}
 .fbox .opts{margin-top:8px}
 .coc{display:flex;gap:6px;flex-wrap:wrap}
 .coc button{appearance:none;display:flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--field);border-radius:999px;padding:6px 12px 6px 6px;font-size:13px;font-weight:700;cursor:pointer;color:var(--ink)}
@@ -334,12 +342,29 @@ function showEvent(id) {
       <label>Курс и факультет</label><input type="text" id="fCourse" placeholder="2 курс, Международные отношения">
       <label>Телефон</label><input type="tel" id="fPhone" autocomplete="tel" placeholder="+998 90 123 45 67">
       ${(e.fields || []).map((fd, i) => `<label>${esc(fd.label)}${fd.required ? '' : ' <span style="text-transform:none;font-weight:500">(необязательно)</span>'}</label>${fd.type === 'choice'
-        ? `<select class="sel" id="fx${i}"><option value="">Выбери…</option>${fd.options.map(o => `<option>${esc(o)}</option>`).join('')}</select>`
+        ? `<div class="pick" id="fx${i}">${fd.options.map(o => `<button type="button" data-pv="${esc(o)}">${esc(o)}</button>`).join('')}</div>`
+        : fd.multi ? `<div class="multi" id="fx${i}"></div><button type="button" class="addm" data-addm="${i}">＋ Добавить ещё</button>`
         : `<input type="text" id="fx${i}" maxlength="120">`}`).join('')}
       ${paid ? `<label>Скриншот оплаты</label><div class="upload" id="upload"><div class="th" id="shotTh">📎</div><div><div style="font-weight:700" id="shotT">Прикрепить скриншот</div><div class="hint" style="margin:0">Чек из Click, Payme или банка</div></div></div>` : ''}
       <button class="btn" id="bSend" ${full ? 'disabled' : ''}>${full ? 'Мест больше нет' : 'Записаться'}</button><div class="err" id="err"></div></div>`, true);
   fillForm();
   $('bShare').onclick = () => shareEvent(e);
+  (e.fields || []).forEach((fd, i) => {
+    const box = $('fx' + i);
+    if (fd.type === 'choice') box.querySelectorAll('[data-pv]').forEach(b => b.onclick = () => { box.querySelectorAll('[data-pv]').forEach(x => x.classList.toggle('on', x === b)); box.dataset.v = b.dataset.pv; box.classList.remove('bad'); haptic('i', 'light'); });
+    else if (fd.multi) {
+      const add = focus => {
+        const n = box.children.length + 1;
+        const row = document.createElement('div'); row.className = 'mrow';
+        row.innerHTML = `<input type="text" maxlength="120" placeholder="${esc(fd.label)} ${n}">` + (n > 1 ? '<button type="button" class="mini">✕</button>' : '');
+        const inp = row.querySelector('input'); inp.oninput = () => box.classList.remove('bad');
+        if (n > 1) row.querySelector('.mini').onclick = () => { row.remove(); [...box.children].forEach((r, k) => r.querySelector('input').placeholder = fd.label + ' ' + (k + 1)); };
+        box.appendChild(row); if (focus) inp.focus();
+      };
+      add(false);
+      app.querySelector(`[data-addm="${i}"]`).onclick = () => { if (box.children.length < 30) add(true); };
+    }
+  });
   let shot = null;
   if (paid) {
     $('bCopy').onclick = async () => { const n = (e.card || '').replace(/\s+/g, ''); try { await navigator.clipboard.writeText(n); toast('Номер карты скопирован'); } catch (x) { toast(n); } haptic('n', 'success'); };
@@ -352,7 +377,13 @@ function showEvent(id) {
     if (f.name.length < 3) bad.push('fName'); if (!f.course) bad.push('fCourse'); if (f.phone.replace(/\D/g, '').length < 9) bad.push('fPhone');
     bad.forEach(x => $(x).classList.add('bad'));
     const extra = {};
-    (e.fields || []).forEach((fd, i) => { const el = $('fx' + i), v = el.value.trim(); if (v) extra[fd.label] = v; else if (fd.required) { el.classList.add('bad'); bad.push('fx' + i); } el.oninput = el.onchange = () => el.classList.remove('bad'); });
+    (e.fields || []).forEach((fd, i) => {
+      const el = $('fx' + i);
+      const v = fd.type === 'choice' ? (el.dataset.v || '') : fd.multi ? [...el.querySelectorAll('input')].map(x => x.value.trim()).filter(Boolean) : el.value.trim();
+      if (v.length) extra[fd.label] = v;
+      else if (fd.required) { (fd.multi ? el.querySelector('input') : el).classList.add('bad'); bad.push('fx' + i); }
+      if (!fd.multi && fd.type !== 'choice') el.oninput = () => el.classList.remove('bad');
+    });
     if (paid && !shot) { $('upload').classList.add('bad'); bad.push('shot'); }
     if (bad.length) { haptic('n', 'error'); $('err').textContent = bad.length === 1 && bad[0] === 'shot' ? 'Прикрепи скриншот оплаты' : 'Заполни отмеченные поля'; return; }
     saveForm(f);
@@ -432,12 +463,12 @@ async function tabClub() {
   if (r.ok) { S.mine = r.events; $('list').querySelectorAll('[data-ev]').forEach(b => b.onclick = () => go(() => showManage(b.dataset.ev))); }
 }
 
-const PRESETS = [{ label: 'Имя партнёра' }, { label: 'Название команды' }, { label: 'Telegram партнёра' }, { label: 'Комитет', type: 'choice', options: ['UNSC', 'UNGA', 'HRC'] }];
+const PRESETS = [{ label: 'Имя партнёра', multi: true }, { label: 'Название команды' }, { label: 'Telegram партнёра' }, { label: 'Комитет', type: 'choice', options: ['UNSC', 'UNGA', 'HRC'] }];
 function showEditor(id) {
   const e = id ? (S.mine || []).find(x => x.id === id) : null;
   const v = e || { type: 'event', cover: '', approval: false, fields: [] };
   let type = v.type, cover = isImg(v.cover) ? v.cover : '', coverData = null;
-  const flds = (v.fields || []).map(f => ({ label: f.label, required: !!f.required, type: f.type || 'text', options: (f.options || []).join(', ') }));
+  const flds = (v.fields || []).map(f => ({ label: f.label, required: !!f.required, type: f.type || 'text', options: (f.options || []).join(', '), multi: !!f.multi }));
   let co = (v.coauthors || []).slice();
   const canCo = !e || e.author;
   render(`<div class="glass sec" style="margin-top:0"><h4>${e ? 'Редактировать' : 'Новый ивент'}</h4>
@@ -475,17 +506,19 @@ function showEditor(id) {
       <button class="mini" data-fd="${i}" type="button">✕</button></div>
       <div class="fld" style="margin-top:8px"><select data-ft="${i}"><option value="text" ${f.type !== 'choice' ? 'selected' : ''}>✏️ Ответ текстом</option><option value="choice" ${f.type === 'choice' ? 'selected' : ''}>☑️ Выбор из списка</option></select>
       <label class="req"><input type="checkbox" data-fr="${i}" ${f.required ? 'checked' : ''}>обязательное</label></div>
+      ${f.type !== 'choice' ? `<div class="fld" style="margin-top:8px"><label class="req"><input type="checkbox" data-fm="${i}" ${f.multi ? 'checked' : ''}>несколько ответов — у студента будет «＋ Добавить ещё»</label></div>` : ''}
       ${f.type === 'choice' ? `<input class="opts" type="text" data-fo="${i}" placeholder="Варианты через запятую: UNSC, UNGA, HRC" value="${esc(f.options)}">` : ''}</div>`).join('');
     const used = flds.map(f => f.label.trim().toLowerCase());
     $('presets').innerHTML = (flds.length < 8 ? PRESETS.map((p, j) => used.indexOf(p.label.toLowerCase()) < 0 ? `<button type="button" data-fp="${j}">＋ ${esc(p.label)}</button>` : '').join('') + '<button type="button" data-fp="-1">＋ Своё поле</button>' : '');
     app.querySelectorAll('[data-fl]').forEach(el => el.oninput = () => { flds[+el.dataset.fl].label = el.value; el.classList.remove('bad'); });
     app.querySelectorAll('[data-fo]').forEach(el => el.oninput = () => { flds[+el.dataset.fo].options = el.value; el.classList.remove('bad'); });
     app.querySelectorAll('[data-fr]').forEach(el => el.onchange = () => { flds[+el.dataset.fr].required = el.checked; });
+    app.querySelectorAll('[data-fm]').forEach(el => el.onchange = () => { flds[+el.dataset.fm].multi = el.checked; });
     app.querySelectorAll('[data-ft]').forEach(el => el.onchange = () => { flds[+el.dataset.ft].type = el.value; drawF(); const o = app.querySelector(`[data-fo="${el.dataset.ft}"]`); o && o.focus(); });
     app.querySelectorAll('[data-fd]').forEach(el => el.onclick = () => { flds.splice(+el.dataset.fd, 1); drawF(); });
     app.querySelectorAll('[data-fp]').forEach(el => el.onclick = () => {
       const p = PRESETS[+el.dataset.fp];
-      flds.push(p ? { label: p.label, required: true, type: p.type || 'text', options: (p.options || []).join(', ') } : { label: '', required: false, type: 'text', options: '' });
+      flds.push(p ? { label: p.label, required: true, type: p.type || 'text', options: (p.options || []).join(', '), multi: !!p.multi } : { label: '', required: false, type: 'text', options: '', multi: false });
       drawF(); if (!p) { const ins = app.querySelectorAll('[data-fl]'); ins[ins.length - 1].focus(); }
     });
   };
@@ -505,7 +538,7 @@ function showEditor(id) {
       place: $('ePlace').value.trim(), description: $('eDesc').value.trim(), chat: $('eChat').value.trim(), approval: type !== 'trip' && $('eAppr').checked,
       price: type === 'trip' ? $('ePrice').value : 0, card: type === 'trip' ? $('eCard').value.trim() : '', holder: type === 'trip' ? $('eHolder').value.trim() : '',
       cover: coverData ? '' : cover, coauthors: canCo ? co : undefined,
-      fields: flds.map(f => ({ label: f.label.trim().replace(/[:\n]/g, ' '), required: f.required, type: f.type, options: f.options.split(',').map(x => x.trim()).filter(Boolean) })).filter(f => f.label) };
+      fields: flds.map(f => ({ label: f.label.trim().replace(/[:\n]/g, ' '), required: f.required, type: f.type, multi: f.type !== 'choice' && f.multi, options: f.options.split(',').map(x => x.trim()).filter(Boolean) })).filter(f => f.label) };
     const bad = []; if (ev.title.length < 3) bad.push('eTitle'); if (!ev.date) bad.push('eDate');
     flds.forEach((f, i) => { if (f.label.trim() && f.type === 'choice' && !f.options.split(',').some(x => x.trim())) bad.push(app.querySelector(`[data-fo="${i}"]`)); });
     if (type === 'trip' && Number(ev.price) > 0) { if (ev.card.replace(/\D/g, '').length < 12) bad.push('eCard'); if (ev.holder.length < 3) bad.push('eHolder'); }
