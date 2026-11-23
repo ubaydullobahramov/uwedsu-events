@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>UWED Events</title>
-<!-- uwed-build:8 -->
-<script>(function(){var B="8";try{if(sessionStorage.getItem("uwchk")===B)return;sessionStorage.setItem("uwchk",B)}catch(e){}fetch(location.pathname+"?nc="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(t){var m=t.match(/uwed-build:(\d+)/);if(m&&m[1]!==B){var u=new URL(location.href);u.searchParams.set("v",m[1]);location.replace(u.toString())}}).catch(function(){})})();</script>
+<!-- uwed-build:9 -->
+<script>(function(){var B="9";try{if(sessionStorage.getItem("uwchk")===B)return;sessionStorage.setItem("uwchk",B)}catch(e){}fetch(location.pathname+"?nc="+Date.now(),{cache:"no-store"}).then(function(r){return r.text()}).then(function(t){var m=t.match(/uwed-build:(\d+)/);if(m&&m[1]!==B){var u=new URL(location.href);u.searchParams.set("v",m[1]);location.replace(u.toString())}}).catch(function(){})})();</script>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
 :root{
@@ -216,10 +216,19 @@ async function api(action, data) {
 }
 async function call(action, data, btn) {
   if (btn) { btn.disabled = true; btn.dataset.t = btn.textContent; btn.textContent = 'Секунду…'; }
-  let r; try { r = await api(action, data); } catch (e) { r = { ok: false, message: 'Нет связи. Попробуй ещё раз.' }; }
+  let r; try { r = await api(action, data); } catch (e) { r = { ok: false, error: 'network', message: 'Нет связи. Попробуй ещё раз.' }; }
   if (btn) { btn.disabled = false; btn.textContent = btn.dataset.t; }
   if (!r.ok) haptic('n', 'error');
   return r;
+}
+
+// Кэш ответов сервера на телефоне: экран рисуется сразу из кэша, свежие данные подтягиваются в фоне.
+const swrKey = a => 'uwed_' + a + '_' + ((inTg && tg.initDataUnsafe.user && tg.initDataUnsafe.user.id) || 0);
+function swrGet(a) { try { return JSON.parse(store.get(swrKey(a)) || 'null'); } catch (e) { return null; } }
+const inflight = {};
+const PEND_KEY = 'uwed_pending_reg';
+function fresh(a) {
+  return inflight[a] || (inflight[a] = call(a).then(r => { delete inflight[a]; if (r.ok) store.set(swrKey(a), JSON.stringify(r)); return r; }));
 }
 
 /* ---------- форматирование ---------- */
@@ -315,9 +324,14 @@ function tabEvents() {
 }
 
 async function tabMy() {
-  skeleton();
-  const r = await call('my');
-  if (S.tab !== 'my') return;
+  const c = swrGet('my');
+  if (c) drawMy(c); else skeleton();
+  const r = await fresh('my');
+  if (S.tab !== 'my' || !$('list') || S.stack.length) return;
+  if (c && (!r.ok || JSON.stringify(c.list) === JSON.stringify(r.list))) return;  // ничего не поменялось
+  drawMy(r);
+}
+function drawMy(r) {
   if (!r.ok) { $('list').innerHTML = '<div class="empty glass"><div class="e">🔒</div>Открой приложение через бота в Telegram, чтобы видеть свои заявки</div>'; return; }
   if (!r.list.length) { $('list').innerHTML = '<div class="empty glass"><div class="e">🎟</div>Ты пока никуда не записан(а)</div>'; return; }
   $('list').innerHTML = r.list.map(m => `<div class="ev glass" style="cursor:default"><div class="cover">${coverHTML(m.cover, m.title)}</div><div class="b"><h3>${esc(m.title)}</h3>
@@ -393,16 +407,36 @@ function showEvent(id) {
     if (bad.length) { haptic('n', 'error'); $('err').textContent = why.length ? 'Проверь: ' + why.join(', ') : bad.length === 1 && bad[0] === 'shot' ? 'Прикрепи скриншот оплаты' : 'Заполни отмеченные поля'; return; }
     saveForm(f);
     await askWrite();
-    const r = await call('register', { eventId: e.id, form: f, extra, screenshot: paid ? shot : null }, $('bSend'));
-    if (!r.ok) { $('err').textContent = r.message || 'Что-то пошло не так'; return; }
-    haptic('n', 'success'); e.registered++; if (e.left) e.left--;
-    const ok = r.status === 'Принят';
+    // Показываем результат сразу, а заявку отправляем в фоне — человеку не нужно ждать сервер.
+    const payload = { eventId: e.id, form: f, extra, screenshot: paid ? shot : null };
+    haptic('n', 'success');
     S.stack.pop();
-    render(`<div class="glass done"><div class="big">${ok ? '🎉' : '⏳'}</div><h2>${ok ? 'Вы приняты!' : 'Заявка отправлена'}</h2>
-      <p>${ok ? esc(e.title) + ' · ' + esc(fmtDate(e.date)) + '. Подтверждение придёт в бот.' : 'Организаторы проверят заявку и пришлют ответ в бот.'}</p>
-      ${r.chat ? '<button class="btn" id="bChat">Вступить в чат участников</button>' : ''}<button class="btn ghost" id="bHome">К ивентам</button></div>`);
-    if ($('bChat')) $('bChat').onclick = () => openLink(r.chat);
-    $('bHome').onclick = () => home('events');
+    const done = (r) => {
+      const ok = r && r.status === 'Принят';
+      render(`<div class="glass done"><div class="big">${ok ? '🎉' : '✅'}</div><h2>${ok ? 'Вы приняты!' : 'Заявка отправлена'}</h2>
+        <p>${ok ? esc(e.title) + ' · ' + esc(fmtDate(e.date)) + '. Подтверждение придёт в бот.' : 'Организаторы проверят заявку и пришлют ответ в бот.'}</p>
+        ${r && r.chat ? '<button class="btn" id="bChat">Вступить в чат участников</button>' : ''}<button class="btn ghost" id="bHome">К ивентам</button>
+        <div class="hint" id="sendSt" style="text-align:center;margin-top:10px">${r ? '' : 'Сохраняем…'}</div></div>`);
+      if ($('bChat')) $('bChat').onclick = () => openLink(r.chat);
+      $('bHome').onclick = () => home('events');
+    };
+    done(null);
+    const onDone = S.stack.length;
+    store.set(PEND_KEY, JSON.stringify(payload));  // если приложение закроют раньше ответа — дошлём при следующем открытии
+    call('register', payload).then(r => {
+      store.set(PEND_KEY, '');  // ответ пришёл (или человек увидел ошибку) — досылать не нужно
+      const here = S.stack.length === onDone && $('sendSt');
+      if (r.ok) {
+        e.registered++; if (e.left) e.left--;
+        delete inflight.my; fresh('my');  // обновим «Мои заявки» в фоне
+        if (here) done(r);
+        return;
+      }
+      haptic('n', 'error');
+      toast(r.message || 'Заявка не отправилась');
+      go(() => showEvent(e.id));
+      if ($('err')) $('err').textContent = r.message || 'Заявка не отправилась — нажми «Записаться» ещё раз';
+    });
   };
 }
 function normPhone(raw) {
@@ -464,9 +498,14 @@ function showClubApply() {
 
 /* ---------- клуб ---------- */
 async function tabClub() {
-  skeleton();
-  const r = await call('myEvents');
-  if (S.tab !== 'club' && S.tab !== 'admin') return;
+  const cached = swrGet('myEvents');
+  if (cached) drawClub(cached); else skeleton();
+  const r = await fresh('myEvents');
+  if ((S.tab !== 'club' && S.tab !== 'admin') || !$('list') || S.stack.length) return;
+  if (cached && (!r.ok || JSON.stringify(cached.events) === JSON.stringify(r.events))) { if (r.ok) S.mine = r.events; return; }
+  drawClub(r);
+}
+function drawClub(r) {
   const c = S.me.club;
   $('list').innerHTML = `${c ? `<div class="glass" style="display:flex;gap:12px;align-items:center;padding:14px">${c.avatar ? `<img class="ava" src="${esc(c.avatar)}">` : '<div class="ava">🏛</div>'}<div><b>${esc(c.name)}</b><div class="hint" style="margin:0">Клуб одобрен ✓</div></div></div>` : ''}
     <div class="btns"><button class="btn" id="bNew">＋ Новый ивент</button><button class="btn ghost" id="bNews">📢 Объявление</button></div>
@@ -686,6 +725,16 @@ async function refresh() {
   hello();
   if (!S.stack.length) showHome();  // не перерисовываем, если человек уже открыл ивент или форму
   openDeep();
+  // заявка, которая не успела уйти в прошлый раз
+  try {
+    const pend = JSON.parse(store.get(PEND_KEY) || 'null');
+    if (pend && inTg) call('register', pend).then(r2 => {
+      if (r2.ok || r2.error !== 'network') store.set(PEND_KEY, '');
+      if (r2.ok) { toast('Заявка отправлена ✅'); delete inflight.my; fresh('my'); refresh().then(() => { if (!S.stack.length) showHome(); }); }
+    });
+  } catch (e) {}
+  // заранее подгружаем вкладки, чтобы они открывались мгновенно
+  if (inTg) { fresh('my'); if (S.me && (S.me.club || S.me.admin)) fresh('myEvents'); }
 })();
 window.__app = { S, call, go, showEvent, home };
 </script>
